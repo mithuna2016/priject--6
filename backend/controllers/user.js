@@ -3,14 +3,16 @@ const jwt = require('jsonwebtoken');
 const user = require("../models/user");
 
 
-    exports.signup = (req, res, next) => {
+   exports.signup = (req, res, next) => {
+   
         bcrypt.hash(req.body.password, 10).then(
           (hash) => {
-            const user = new User({
+            const newUser = new user({
               email: req.body.email,
               password: hash
             });
-            user.save().then(
+           
+          newUser.save().then(
               () => {
                 res.status(201).json({
                   message: 'User added successfully!'
@@ -24,13 +26,15 @@ const user = require("../models/user");
               }
             );
           }
+          
         );
+        
       };
 
 
 
       exports.login = (req, res, next) => {
-        User.findOne({ email: req.body.email }).then(
+        user.findOne({ email: req.body.email }).then(
           (user) => {
             if (!user) {
               return res.status(401).json({

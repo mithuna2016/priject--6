@@ -4,17 +4,18 @@ const mongoose = require('mongoose');
 
 const sauces = require('./models/sauces');
 const userRoutes = require('./routes/user');
+const { response } = require("express");
 const app = express();
 
 // connect with mongoose
-//mongoose.connect('mongodb+srv://will:<PASSWORD>@cluster0-pme76.mongodb.net/test?retryWrites=true')
-  //.then(() => {
-   // console.log('Successfully connected to MongoDB Atlas!');
- // })
-  //.catch((error) => {
-   // console.log('Unable to connect to MongoDB Atlas!');
-   // console.error(error);
- // });
+
+mongoose.connect('mongodb+srv://mithunap-6:Sarasvin23@cluster0.jpm7k.mongodb.net/project-6?retryWrites=true&w=majority')
+.then(()=>{
+    console.log('successfully connected to mongo db atlass')
+})
+.catch((erro)=>{
+    console.log('enable to connect to mongo db');
+});
 
 //to prevent CORS errors
 app.use((req, res, next) => {
@@ -24,14 +25,15 @@ app.use((req, res, next) => {
     next();
   });
 //connect with image folder
- // app.use('/images', express.static(path.join(__dirname, 'images')));
+  //app.use('/images', express.static(path.join(__dirname, 'images')));
   app.use(bodyParser.urlencoded({extended:true}));
   app.use(bodyParser.json());
-
+  
+  //get all sauces
   app.get('/api/sauces',(req,res,next)=>{
-    Thing.find().then(
-      (things) => {
-        res.status(200).json(things);
+    sauces.find().then(
+      (result) => {
+        res.status(200).json(result);
       }
     ).catch(
       (error) => {
@@ -45,14 +47,14 @@ app.use((req, res, next) => {
  
 
 
-
+//get the sauces by id 
 
   app.get('/api/sauces/:id',(req,res,next)=>{
-    Thing.findOne({
+    sauces.findOne({
       _id: req.params.id
     }).then(
-      (thing) => {
-        res.status(200).json(thing);
+      (object) => {
+        res.status(200).json(object);
       }
     ).catch(
       (error) => {
@@ -65,18 +67,27 @@ app.use((req, res, next) => {
   });
 
  
-
+//add the new sauces
   
   app.post('/api/sauces',(req,res,next)=>{
-    const sauces = new Thing({
+    const sauce = new sauces({
+      userId:req.body.userId,
       name: req.body.name,
       manufacturer:  req.body.manufacturer,
       description: req.body.description ,
       mainPepper: req.body. mainPepper ,
-      imageUrl:  req.body.imageUrl
+      imageUrl:  req.body.imageUrl,
+      heat: req.body.heat,
+      likes: req.body.likes,
+      dislikes:req.body.dislikes,
+      usersLikes: req.body.usersLikes,
+      usersDislikes:req.body.usersDislikes,
       
       });
-      thing.save().then(
+      /*res.status(201).json({
+        message: sauce.name
+      });*/
+      sauce.save().then(
         () => {
           res.status(201).json({
             message: 'Post saved successfully!'
@@ -92,10 +103,10 @@ app.use((req, res, next) => {
   
   });
 
-  
+  //edit the sauces
 
   app.put('/api/sauces/:id',(req,res,next)=>{
-    const sauces = new Thing({
+    const sauce = new sauces({
       name: req.body.name,
       manufacturer:  req.body.manufacturer,
       description: req.body.description ,
@@ -103,7 +114,7 @@ app.use((req, res, next) => {
       imageUrl:  req.body.imageUrl
       
       });
-    Thing.updateOne({_id: req.params.id}, thing).then(
+    sauce.updateOne({_id: req.params.id}, thing).then(
       () => {
         res.status(201).json({
           message: 'Thing updated successfully!'
@@ -119,10 +130,10 @@ app.use((req, res, next) => {
 
   });
 
-  
+//delete the sauces
 
   app.delete('/api/sauces/:id',(req,res,next)=>{
-    Thing.deleteOne({_id: req.params.id}).then(
+    s.deleteOne({_id: req.params.id}).then(
       () => {
         res.status(200).json({
           message: 'Deleted!'
@@ -148,6 +159,6 @@ app.use((req, res, next) => {
 
 
   
- // app.use('/api/auth', userRoutes);
+  app.use('/api/auth', userRoutes);
 
 module.exports=app;
