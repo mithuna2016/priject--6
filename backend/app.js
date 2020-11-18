@@ -27,7 +27,7 @@ app.use((req, res, next) => {
   });
 //connect with image folder
   app.use('/images', express.static(path.join(__dirname, 'images')));
-  app.use(bodyParser.urlencoded({extended:true}));
+ // app.use(bodyParser.urlencoded({extended:true}));
   app.use(bodyParser.json());
   
  /* app.post('/api/sauces/:id/like',(req,res,next)=>{
