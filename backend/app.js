@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const saucesRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const { response } = require("express");
+const path = require('path');
 const app = express();
 
 // connect with mongoose
@@ -25,11 +26,18 @@ app.use((req, res, next) => {
     next();
   });
 //connect with image folder
-  //app.use('/images', express.static(path.join(__dirname, 'images')));
+  app.use('/images', express.static(path.join(__dirname, 'images')));
   app.use(bodyParser.urlencoded({extended:true}));
   app.use(bodyParser.json());
   
-  
+ /* app.post('/api/sauces/:id/like',(req,res,next)=>{
+    const like ={
+      userId:req.body.userId,
+      like:req.body.like
+
+    }
+  });
+*/
 
   app.use('/api/sauces',saucesRoutes)
   app.use('/api/auth', userRoutes);
