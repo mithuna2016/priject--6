@@ -49,7 +49,7 @@ const user = require("../models/user");
                   });
                 }
                 const token = jwt.sign(
-                    {userID:user._id},
+                    {userId:user._id},
                     'my_name_is_sarasvin_i_am_4_yeras_old',
                     {expiresIn:'24h'}
                 );

@@ -21,7 +21,7 @@ exports.getAllSauces = (req,res,next)=>{
       _id: req.params.id
     }).then(
       (sauce) => {
-        console.log(sauce);
+        
         res.status(200).json(sauce);
       }
     ).catch(
@@ -81,7 +81,7 @@ if (req.file) {
     mainPepper: req.body.sauce.mainPepper,
     imageUrl: url + "/images/" + req.file.filename,
     heat: req.body.sauce.heat,
-  }
+  };
 }else {
   sauce = {
     _id: req.params.id,
@@ -90,9 +90,8 @@ if (req.file) {
     manufacturer: req.body.manufacturer,
     description: req.body.description,
     mainPepper: req.body.mainPepper,
-    imageUrl:'',
     heat: req.body.heat,
-  }
+  };
 }
 sauces.updateOne({ _id: req.params.id }, sauce)
   .then(() => {
@@ -127,4 +126,38 @@ sauces.updateOne({ _id: req.params.id }, sauce)
         });
       }
     );
+  };
+
+  exports.likeSauces = (req, res, next) => {
+    sauces.findOne({_id: req.params.id}).then((sauce) => {
+      if (req.body.like == 1) {
+          sauce.usersLiked.push(req.body.userId)
+          sauce.likes += req.body.like
+      } else if (req.body.like == 0 && sauce.usersLiked.includes(req.body.userId)) {
+          sauce.usersLiked.remove(req.body.userId)
+          sauce.likes -= 1
+      } else if (req.body.like == -1) {
+          sauce.usersDisliked.push(req.body.userId)
+          sauce.dislikes += 1
+      } else if (req.body.like == 0 && sauce.usersDisliked.includes(req.body.userId)) {
+          sauce.usersDisliked.remove(req.body.userId)
+          sauce.dislikes -= 1
+      }
+     
+      sauce.save().then(
+          () => {
+              res.status(200).json({
+                  message: "Sauce Like Updated!"
+              });
+          }
+      ).catch(
+          (error) => {
+              res.status(400).json({
+                  error: error
+              });
+          }
+      );
+  });
+
+    
   };

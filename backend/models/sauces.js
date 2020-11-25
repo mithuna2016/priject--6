@@ -12,8 +12,8 @@ const thingSchema = mongoose.Schema({
   heat: { type: Number, required: true },
   likes: { type: Number, required: true },
   dislikes: { type: Number, required: true },
-  usersLikes: { type: [String] },
-  usersDislikes: { type: [String]},
+  usersLiked: { type: [String] },
+  usersDisliked: { type: [String]},
   
 
 });
